@@ -3,5 +3,5 @@
 #'
 
 SSCD <- function() {
-	return "hello, hello"
+	return("hello, hello")
 }
