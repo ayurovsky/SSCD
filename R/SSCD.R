@@ -6,6 +6,6 @@
 #'
 
 SSCD <- function() {
-	aged::aged()
+	aged::aged(NULL)
 	return("hello, hello")
 }
