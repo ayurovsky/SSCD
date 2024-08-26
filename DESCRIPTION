@@ -3,3 +3,7 @@ Version: 0.1
 Remotes: rmoffitt/aged
 Imports:
   aged 
+  ROI
+  ROI.plugin.alabama
+  foreach
+  doParallel
