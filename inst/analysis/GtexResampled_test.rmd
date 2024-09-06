@@ -1,0 +1,49 @@
+---
+title: "SSCD Vignette on GtexResampled Data"
+author: "Alisa Yurovsky, Richard Moffitt"
+date: "09/06/2024"
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(SSCD)
+```
+
+## Load GtexResampled Data data
+
+```{r}
+load("../../data/GtexResampled.RData")
+```
+
+## Load the expression matrix 
+
+SSCD optimization can take a couple of hours in a multi-core environment.  We demonstrate with a small subset.
+
+```{r}
+small_mix <- Dataset_Resampled_Gtex$ex[1:100,]
+
+compartment_n <- nrow(Dataset_Resampled_Gtex$trueH)
+
+```
+
+## Get the number of compartments from the trueH matrix
+
+
+```{r}
+
+compartment_n <- nrow(Dataset_Resampled_Gtex$trueH)
+
+```
+
+## Load the expression matrix 
+
+Please choose the number of cores available for the optimizaton
+
+```{r}
+improvedW <- SSCD::SSCD(small_mix, compartments_n = compartment_n, nrun = 200, nmf_seed = 124578, mvg = 1000, parallel_n = 10)
+
+```
+
+
