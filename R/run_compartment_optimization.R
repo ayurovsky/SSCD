@@ -1,3 +1,22 @@
+#' Run optimization for individual samples
+#'
+#'
+#' \code{run_compartment_optimization} will perform gene-specific sample-specific optimization on the output of FastaNFM or other deconvolution technique
+#'
+#' @param data Gene expression target data, a matrix-like object. The rows should represent genes, and each row must have a unique row name. Each column should represent a different sample.
+#'
+#' @param compartments_n The factorization rank (number of factors) to be used during NMF. This function argument should be a positive integer value.
+#'
+#' @param samples_n The number of samples in the dataset
+#'
+#' @param genes_n The number of genes in the dataset
+#'
+#' @param resultH The H matrix from (FaStaNMF) deconvolution
+#'
+#' @param parallel_n The number of cores available for parallel optimization - will drastically impact runtime
+#'
+#' @return A list containing W matrix for every sample; in each matrix, rows are genes and columns are deconvolved compartments/factors/tissues types 
+#' 
 #'
 #' @export
 #'
@@ -10,7 +29,7 @@
 #'
 
 
-run_compartment_optimization <-  function(trueMixed, compartments_n, samples_n, genes_n, resultH, resultW, parallel_n=2) {
+run_compartment_optimization <-  function(data, compartments_n, samples_n, genes_n, resultH, resultW, parallel_n=2) {
 
   registerDoParallel(parallel_n)
 
@@ -19,7 +38,7 @@ run_compartment_optimization <-  function(trueMixed, compartments_n, samples_n, 
   improvedW <- foreach (sample_n=1:samples_n) %dopar% {
     sample_w <- vector()
     for (gene_n in 1:genes_n) {
-      mixed <- trueMixed[gene_n,sample_n]
+      mixed <- data[gene_n,sample_n]
       nmf_h <- resultH[,sample_n]
       nmf_w <- resultW[[sample_n]][gene_n,]
 
@@ -56,7 +75,7 @@ run_compartment_optimization <-  function(trueMixed, compartments_n, samples_n, 
       }
 
       sample_w <- rbind(sample_w, neww)
-      rownames(sample_w)[gene_n] <- rownames(trueMixed)[gene_n]
+      rownames(sample_w)[gene_n] <- rownames(data)[gene_n]
     }
     sample_w
   }
