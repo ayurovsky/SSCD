@@ -7,3 +7,4 @@ Imports:
   ROI.plugin.alabama
   foreach
   doParallel
+RoxygenNote: 7.2.3
