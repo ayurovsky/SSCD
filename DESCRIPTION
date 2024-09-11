@@ -1,6 +1,8 @@
 Package: SSCD 
 Version: 0.1
 Remotes: rmoffitt/aged
+Depends:
+  R (>= 3.5.0)
 Imports:
   NMF,
   aged, 
