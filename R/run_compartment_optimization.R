@@ -63,10 +63,10 @@ run_compartment_optimization <-  function(data, compartments_n, samples_n, genes
       #initial values
       x0 <- as.vector(nmf_w)
 
-      nlp <- OP(objective = F_objective(eval_f, n=compartments_n),
-              constraints = F_constraint(eval_g_eq, dir = "==", rhs = 0), bounds = V_bound(lb = rep(0.0001, compartments_n)))
+      nlp <- ROI::OP(objective = ROI::F_objective(eval_f, n=compartments_n),
+              constraints = ROI::F_constraint(eval_g_eq, dir = "==", rhs = 0), bounds = ROI::V_bound(lb = rep(0.0001, compartments_n)))
 
-      sol <- ROI_solve(nlp, solver = "alabama", start = x0)
+      sol <- ROI::ROI_solve(nlp, solver = "alabama", start = x0)
 
       neww <- as.vector(sol$solution)
 
