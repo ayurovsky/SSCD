@@ -19,7 +19,7 @@
 #' 
 #' @export
 #'
-#'
+#' @import NMF
 #' @import aged 
 #'
 
