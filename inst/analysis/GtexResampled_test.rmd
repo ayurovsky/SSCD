@@ -7,14 +7,16 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
+
 library(SSCD)
 ```
 
 ## Load GtexResampled Data data
 
 ```{r}
-load("../../data/GtexResampled.RData")
+load("SSCD/data/GtexResampled.RData")
 ```
 
 ## Load the expression matrix 
@@ -23,8 +25,6 @@ SSCD optimization can take a couple of hours in a multi-core environment.  We de
 
 ```{r}
 small_mix <- Dataset_Resampled_Gtex$ex[1:100,]
-
-compartment_n <- nrow(Dataset_Resampled_Gtex$trueH)
 
 ```
 
@@ -39,7 +39,7 @@ compartment_n <- nrow(Dataset_Resampled_Gtex$trueH)
 
 ## Load the expression matrix 
 
-Please choose the number of cores available for the optimizaton
+For optimization, set the number of cores (parallel_n) available for the optimizaton - the more the better
 
 ```{r}
 improvedW <- SSCD::SSCD(small_mix, compartments_n = compartment_n, nrun = 200, nmf_seed = 124578, mvg = 1000, parallel_n = 10)
