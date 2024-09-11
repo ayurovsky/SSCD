@@ -11,12 +11,14 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 
 library(SSCD)
+
 ```
 
 ## Load GtexResampled Data data
 
 ```{r}
 load("SSCD/data/GtexResampled.RData")
+
 ```
 
 ## Load the expression matrix 
