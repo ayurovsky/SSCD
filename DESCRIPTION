@@ -2,6 +2,7 @@ Package: SSCD
 Version: 0.1
 Remotes: rmoffitt/aged
 Imports:
+  NMF,
   aged, 
   ROI,
   ROI.plugin.alabama,
