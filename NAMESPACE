@@ -2,9 +2,9 @@
 
 export(SSCD)
 export(run_compartment_optimization)
-import(ROI)
-import(ROI.plugin.alabama)
 import(NMF)
 import(aged)
+import(ROI)
+import(ROI.plugin.alabama)
 import(doParallel)
 import(foreach)
