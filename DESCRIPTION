@@ -1,13 +1,11 @@
 Package: SSCD 
-Version: 0.1
+Version: 0.2
 Remotes: rmoffitt/aged
 Depends:
   R (>= 3.5.0)
 Imports:
   NMF,
-  aged, 
-  ROI,
-  ROI.plugin.alabama,
+  aged,
   foreach,
   doParallel
 RoxygenNote: 7.2.3
