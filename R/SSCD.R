@@ -55,7 +55,7 @@ SSCD <- function(data, compartments_n = 3, nrun = 200, nmf_seed = 124578, mvg = 
   ##############
   # Creates list of Ws for every sample (for NMF, all Ws are the same)
   resultW <- lapply(seq_len(ncol(h)), function(X) w)
-  resultH <- apply(h, 2, FUN = sum_to_1)
+  resultH <- h 
   ##############
   
   
@@ -68,12 +68,3 @@ SSCD <- function(data, compartments_n = 3, nrun = 200, nmf_seed = 124578, mvg = 
   improvedW <- run_compartment_optimization(data, compartments_n = compartments_n, samples_n = samples_n, genes_n = genes_n, resultH = resultH, resultW = resultW, parallel_n = parallel_n)
   return(improvedW)
 }
-
-# helper function                    
-sum_to_1 = function(col)
-{
-  return (col/sum(col))
-}
-                    
-
-                    

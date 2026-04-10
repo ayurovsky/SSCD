@@ -21,8 +21,6 @@
 #' @export
 #'
 #'
-#' @import ROI
-#' @import ROI.plugin.alabama
 #' @import foreach
 #' @import doParallel
 #'
@@ -35,54 +33,54 @@ run_compartment_optimization <-  function(data, compartments_n, samples_n, genes
 
   print("Starting Sample Specific Compartment Optimization...")
   start_time <- Sys.time()
-  improvedW <- foreach (sample_n=1:samples_n) %dopar% {
+
+  closed_form_W <-  foreach (sample_n=1:samples_n) %dopar% {
     sample_w <- vector()
     for (gene_n in 1:genes_n) {
-      mixed <- data[gene_n,sample_n]
+      mixed <- mixture[gene_n,sample_n]
       nmf_h <- resultH[,sample_n]
       nmf_w <- resultW[[sample_n]][gene_n,]
 
-      # build objective function
-      eval_f <- "function(x) { return ( "
-      for (i in 1:(compartments_n-1)){
-         eval_f <- paste0(eval_f, "((x[", i ,"] - ", nmf_w[i], ")/", nmf_w[i], ")^2 + ")
+      # initialize not-to-use-indexes
+      not_to_use <- integer(0)
+      iterate <- TRUE
+
+      while(iterate) {
+	iterate <- FALSE # ideally this loop will run just once
+	# calculate the closed form solution
+	fh_sum <- 0
+	fh_sum_sq <- 0
+	for (i in 1:compartments_n) {
+	  if (!(i %in% not_to_use)) { # ignore compartments set to zero in previous iteration(s)
+	    fh_sum <- fh_sum + nmf_h[i]*nmf_w[i]
+	    fh_sum_sq <- fh_sum_sq + nmf_h[i]*nmf_w[i]*nmf_h[i]*nmf_w[i]
+	  }
+	}
+	common <- (mixed - fh_sum)/fh_sum_sq
+	closed_w <- c()
+	for (i in 1:compartments_n){
+	  if (i %in% not_to_use) { # ignore compartments set to zero in previous iteration(s)
+	    closed_w <- c(closed_w, 0.0)
+	  } else {
+	    new_val <- nmf_w[i] + nmf_h[i]*nmf_w[i]*nmf_w[i]*common
+	    if (new_val < 0.0) {
+	      not_to_use <- c(not_to_use, i)
+	      iterate <- TRUE # negative, set to zero, will need to iterate
+	      closed_w <- c(closed_w, 0.0)
+	    } else {
+	      closed_w <- c(closed_w, new_val) # adding the solved value for this compartment
+	    }
+	  }
+	}
       }
-      eval_f <- paste0(eval_f,"((x[",i+1,"] - ", nmf_w[i+1], ")/", nmf_w[i+1], ")^2 ) }")
-      eval_f <- eval(parse(text = eval_f)) #noquote(eval_f)
-
-      # equality constraints
-      eval_g_eq <- "function(x) { return ( "
-      for (i in 1:(compartments_n-1)){
-        eval_g_eq <- paste0(eval_g_eq, "x[", i ,"] * ", nmf_h[i], " + ")
-      }
-      eval_g_eq <-  paste0(eval_g_eq, "x[", i+1 ,"] * ", nmf_h[i+1], " - ", mixed, ") }")
-      eval_g_eq <- eval(parse(text = eval_g_eq)) #noquote(eval_g_eq)
-
-      # lower bound constraints
-
-      #initial values
-      x0 <- as.vector(nmf_w)
-
-      nlp <- ROI::OP(objective = ROI::F_objective(eval_f, n=compartments_n),
-              constraints = ROI::F_constraint(eval_g_eq, dir = "==", rhs = 0), bounds = ROI::V_bound(lb = rep(0.0001, compartments_n)))
-
-      sol <- ROI::ROI_solve(nlp, solver = "alabama", start = x0)
-
-      neww <- as.vector(sol$solution)
-
-      if (sol$status$msg$symbol != "SUCCESS") {
-        neww <- nmf_w
-      }
-
-      sample_w <- rbind(sample_w, neww)
-      rownames(sample_w)[gene_n] <- rownames(data)[gene_n]
+      sample_w <- rbind(sample_w, closed_w)
     }
     sample_w
   }
   end_time <- Sys.time()
   print(end_time - start_time)
 
-  return(improvedW)
+  return(closed_form_W)
 
 }
 
