@@ -25,6 +25,11 @@
 
 SSCD <- function(data, compartments_n = 3, nrun = 200, nmf_seed = 124578, mvg = 1000, parallel_n = 2, ...) {
 
+  if (!"package:NMF" %in% search()) {
+    requireNamespace("NMF")
+    library(NMF)
+  }
+
   data_nmf <- aged::fastanmf(data, rank = compartments_n, nrun = nrun, nmf_seed = nmf_seed, mvg = mvg, ...)
   
   
