@@ -37,7 +37,7 @@ run_compartment_optimization <-  function(data, compartments_n, samples_n, genes
   closed_form_W <-  foreach (sample_n=1:samples_n) %dopar% {
     sample_w <- vector()
     for (gene_n in 1:genes_n) {
-      mixed <- mixture[gene_n,sample_n]
+      mixed <- data[gene_n,sample_n]
       nmf_h <- resultH[,sample_n]
       nmf_w <- resultW[[sample_n]][gene_n,]
 
