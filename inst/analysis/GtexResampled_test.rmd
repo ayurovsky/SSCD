@@ -8,13 +8,18 @@ output:
 
 ```{r setup, include=FALSE}
 
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, eval=FALSE, tidy=TRUE)
+
+```
+
+## Load SSCD
+```{r}
 
 library(SSCD)
 
 ```
 
-## Load GtexResampled Data data
+## Load GtexResampled Data
 
 ```{r}
 data("GtexResampled", package = "SSCD")
@@ -39,9 +44,9 @@ compartment_n <- nrow(Dataset_Resampled_Gtex$trueH)
 
 ```
 
-## Load the expression matrix 
+## Run SSCD
 
-For optimization, set the number of cores (parallel_n) available for the optimizaton - the more the better
+Set the number of cores (parallel_n) available for the optimization.
 
 ```{r}
 improvedW <- SSCD::SSCD(small_mix, compartments_n = compartment_n, nrun = 200, nmf_seed = 124578, mvg = 1000, parallel_n = 10)
