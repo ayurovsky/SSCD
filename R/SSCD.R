@@ -30,6 +30,7 @@ SSCD <- function(data, compartments_n = 3, nrun = 200, nmf_seed = 124578, mvg = 
     library(NMF)
   }
 
+  print("added NMF Package")
   data_nmf <- aged::fastanmf(data, rank = compartments_n, nrun = nrun, nmf_seed = nmf_seed, mvg = mvg, ...)
   
   
