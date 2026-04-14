@@ -17,7 +17,7 @@ library(SSCD)
 ## Load GtexResampled Data data
 
 ```{r}
-load("SSCD/data/GtexResampled.RData")
+data("GtexResampled", package = "SSCD")
 
 ```
 
